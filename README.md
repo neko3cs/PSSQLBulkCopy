@@ -26,41 +26,45 @@ Column1Type,Column2Type,Column3Type...
 
 以下はSQL Serverデータ型とC#データ型のマッピングになります。
 
-内部的には以下のように扱われます。参考資料として載せておきます。
+内部的には以下の型ように扱われます。参考資料として載せておきます。
 
 |SQL Server       |C#             |
 |--               |--             |
-|BigInt           |long           |
-|Binary           |byte[]         |
-|Bit              |bool           |
-|Char             |string         |
-|DateTime         |DateTime       |
-|Decimal          |decimal        |
-|Float            |double         |
-|Image            |byte[]         |
-|Int              |int            |
-|Money            |decimal        |
-|NChar            |string         |
-|NText            |string         |
-|NVarChar         |string         |
-|Real             |float          |
-|UniqueIdentifier |Guid           |
-|SmallDateTime    |DateTime       |
-|SmallInt         |short          |
-|SmallMoney       |decimal        |
-|Text             |string         |
-|Timestamp        |byte[]         |
-|TinyInt          |byte           |
-|VarBinary        |byte[]         |
-|VarChar          |string         |
-|Variant          |object         |
-|Xml              |XmlElement     |
-|Udt              |-              |
-|Structured       |-              |
-|Date             |DateTime       |
-|Time             |TimeSpan       |
-|DateTime2        |DateTime       |
-|DateTimeOffset   |DateTimeOffset |
+|bigint           |long           |
+|binary           |byte[]         |
+|bit              |bool           |
+|char             |string         |
+|datetime         |DateTime       |
+|decimal          |decimal        |
+|float            |double         |
+|image            |byte[]         |
+|int              |int            |
+|money            |decimal        |
+|nchar            |string         |
+|ntext            |string         |
+|nvarchar         |string         |
+|real             |float          |
+|uniqueidentifier |Guid           |
+|smalldatetime    |DateTime       |
+|smallint         |short          |
+|smallmoney       |decimal        |
+|text             |string         |
+|timestamp        |byte[]         |
+|tinyint          |byte           |
+|varbinary        |byte[]         |
+|varchar          |string         |
+|variant          |object         |
+|xml              |XmlElement     |
+|udt              |-              |
+|structured       |-              |
+|date             |DateTime       |
+|time             |TimeSpan       |
+|datetime2        |DateTime       |
+|datetimeoffset   |DateTimeOffset |
+
+- udtとstructuredはSQL Serverの特殊な型のため、未対応です
+- byte[], Guid, object, XmlElement, DateTimeOffsetに関しては動作未確認です
+  - TODO: いずれテストする
 
 ## 参考文献
 

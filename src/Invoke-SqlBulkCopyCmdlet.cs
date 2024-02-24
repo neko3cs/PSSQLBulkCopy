@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
 using System.Management.Automation;
 
 namespace PSSQLBulkCopy
@@ -46,7 +45,7 @@ namespace PSSQLBulkCopy
         public int? ConnectionTimeout { get; set; }
 
         private string _connectionString;
-        private IEnumerable<Person> _items;
+        private IEnumerable<string> _csvLines;
 
         protected override void BeginProcessing()
         {
@@ -60,10 +59,7 @@ namespace PSSQLBulkCopy
 
             }.ConnectionString;
 
-            _items = File
-                .ReadAllLines(CsvFilePath)
-                .Skip(2) // 1行目: カラム名, 2行目: 型名
-                .Select(line => new Person(line));
+            _csvLines = File.ReadAllLines(CsvFilePath);
         }
 
         protected override void ProcessRecord()
@@ -76,7 +72,7 @@ namespace PSSQLBulkCopy
                     using (var bulkCopy = new SqlBulkCopy(connection, SqlBulkCopyOptions.Default, transaction))
                     {
                         bulkCopy.DestinationTableName = TableName;
-                        bulkCopy.WriteToServer(_items.ToDataTable());
+                        bulkCopy.WriteToServer(_csvLines.ToDataTableFromCsvLines());
                     }
                     transaction.Commit();
                 }
@@ -85,21 +81,6 @@ namespace PSSQLBulkCopy
 
         protected override void EndProcessing()
         {
-        }
-    }
-
-    public class Person
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string PhoneNumber { get; set; }
-
-        public Person(string csvLine)
-        {
-            var csv = csvLine.Split(',');
-            Id = int.Parse(csv[0]);
-            Name = csv[1];
-            PhoneNumber = csv[2];
         }
     }
 }

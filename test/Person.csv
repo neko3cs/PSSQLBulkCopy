@@ -1,5 +1,5 @@
 Id,Name,PhoneNumber
-int,string,string
+int,nvarchar,nvarchar
 10,Taro,0123-45-6789
 20,Jiro,090-1234-5678
 30,Saburo,070-9876-5432

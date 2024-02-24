@@ -1,33 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace PSSQLBulkCopy
 {
   public static class IEnumerableExtensions
   {
-    public static DataTable ToDataTable<T>(this IEnumerable<T> items)
+    public static DataTable ToDataTableFromCsvLines(this IEnumerable<string> items)
     {
-      var table = new DataTable();
-      var props = typeof(T).GetProperties();
+      if (items.Count() < 3)
+        throw new InvalidOperationException("カラム名行、型名行、値行からなる3行以上のCSVに対応しています。");
 
-      foreach (var prop in props)
+      var columnNames = items.First().Split(',');
+      var types = items.Skip(1).First().Split(',');
+
+      if (columnNames.Length != types.Length)
+        throw new InvalidOperationException("カラム名行と型名行の項目数が異なっています。");
+
+      var table = new DataTable();
+      foreach (var i in Enumerable.Range(0, columnNames.Length))
       {
-        var isNullableType = prop.PropertyType.IsGenericType &&
-                             prop.PropertyType.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
+        var isNullableType = types[i].Trim().EndsWith("?");
         table.Columns.Add(new DataColumn
         {
-          ColumnName = prop.Name,
-          DataType = isNullableType ? Nullable.GetUnderlyingType(prop.PropertyType)
-                                    : prop.PropertyType
+          ColumnName = columnNames[i],
+          DataType = isNullableType ? Nullable.GetUnderlyingType(TypeMapper.GetType(types[i]))
+                                    : TypeMapper.GetType(types[i])
         });
       }
-      foreach (var item in items)
+      foreach (var item in items.Skip(2))
       {
+        var columns = item.Split(',');
+        if (columnNames.Length != columns.Length)
+          throw new InvalidOperationException($"カラム名行と値行の項目数が異なっています。: {item}");
+
         var row = table.NewRow();
-        foreach (var prop in props)
+        foreach (var i in Enumerable.Range(0, columnNames.Length))
         {
-          row[prop.Name] = prop.GetValue(item) ?? DBNull.Value;
+          row[columnNames[i]] = Convert.ChangeType(columns[i], TypeMapper.GetType(types[i])) ?? DBNull.Value;
         }
         table.Rows.Add(row);
       }
