@@ -21,12 +21,11 @@ namespace PSSQLBulkCopy
       var table = new DataTable();
       foreach (var i in Enumerable.Range(0, columnNames.Length))
       {
-        var isNullableType = types[i].Trim().EndsWith("?");
         table.Columns.Add(new DataColumn
         {
           ColumnName = columnNames[i],
-          DataType = isNullableType ? Nullable.GetUnderlyingType(TypeMapper.GetType(types[i]))
-                                    : TypeMapper.GetType(types[i])
+          DataType = TypeMapper.GetType(types[i].GetNullableUnderlyingTypeString()),
+          AllowDBNull = types[i].IsNullable()
         });
       }
       foreach (var item in items.Skip(2))
@@ -38,12 +37,38 @@ namespace PSSQLBulkCopy
         var row = table.NewRow();
         foreach (var i in Enumerable.Range(0, columnNames.Length))
         {
-          row[columnNames[i]] = Convert.ChangeType(columns[i], TypeMapper.GetType(types[i])) ?? DBNull.Value;
+          object value;
+          if (columns[i].IsDBNull())
+          {
+            value = DBNull.Value;
+          }
+          else if (types[i].IsBit())
+          {
+            value = Convert.ToBoolean(Convert.ToInt16(columns[i]));
+          }
+          else
+          {
+            value = Convert.ChangeType(columns[i], TypeMapper.GetType(types[i].GetNullableUnderlyingTypeString()));
+          }
+
+          row[columnNames[i]] = value ?? DBNull.Value;
         }
         table.Rows.Add(row);
       }
 
       return table;
     }
+
+    private static string GetNullableUnderlyingTypeString(this string self) =>
+      self.Trim().EndsWith("?") ? self.Trim().Replace("?", "") : self.Trim();
+
+    private static bool IsNullable(this string self) =>
+      self.Trim().EndsWith("?");
+
+    private static bool IsDBNull(this string self) =>
+      self.GetNullableUnderlyingTypeString() is "DBNULL";
+
+    private static bool IsBit(this string self) =>
+      self.GetNullableUnderlyingTypeString() is "bit";
   }
 }

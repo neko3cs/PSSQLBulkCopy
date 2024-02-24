@@ -20,16 +20,18 @@ Invoke-SqlBulkCopy `
 
 - 1行目: カラム名
 - 2行目: SQL Server型名
+  - `?` をつけるとNULL許容として認識します
 - 3行目以降: 値
+  - `DBNULL` とするとNULLで格納されます
 
 以下がサンプルになります。
 
 ```csv
 Id,Name,Age,IsMale
-int,nvarchar,int,bit
+int,nvarchar,int,bit?
 1,Bob,20,1
 2,Alice,21,0
-3,John,22,1
+3,John,22,DBNULL
 ```
 
 ## 型一覧表
