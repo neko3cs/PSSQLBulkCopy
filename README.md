@@ -6,21 +6,31 @@ SQLBulkCopyをラップした、PowerShellコマンドレットです。
 
 サポートされたフォーマットにしたがって用意したCSVをコマンドレットに渡します。
 
-コマンドレットのパラメータは `help` コマンドを使用して確認してください。
+```pwsh
+Invoke-SqlBulkCopy `
+  -ServerInstance {SQL Serverのサーバーインスタンス名} `
+  -Database {対象データベース名} `
+  -Username {対象データベースのユーザー名} `
+  -Password {対象データベースのユーザーパスワード} `
+  -TableName {バルクコピー先のテーブル名} `
+  -CsvFilePath {後述のフォーマットに従ったCSVファイルのパス}
+```
 
 サポートするCSVのフォーマットは以下の通りになります。
-
-```csv
-Column1Name,Column2Name,Column3Name...
-Column1Type,Column2Type,Column3Type...
-1stRowValueOfColumn1,1stRowValueOfColumn2,1stRowValueOfColumn3...
-2ndRowValueOfColumn1,2ndRowValueOfColumn2,2ndRowValueOfColumn3...
-...
-```
 
 - 1行目: カラム名
 - 2行目: SQL Server型名
 - 3行目以降: 値
+
+以下がサンプルになります。
+
+```csv
+Id,Name,Age,IsMale
+int,nvarchar,int,bit
+1,Bob,20,1
+2,Alice,21,0
+3,John,22,1
+```
 
 ## 型一覧表
 
