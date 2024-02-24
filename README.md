@@ -66,3 +66,4 @@ Column1Type,Column2Type,Column3Type...
 
 - [SQL Server データ型のマッピング - ADO.NET | Microsoft Learn](https://learn.microsoft.com/ja-jp/dotnet/framework/data/adonet/sql-server-data-type-mappings)
 - [SQL と CLR の型マッピング - ADO.NET | Microsoft Learn](https://learn.microsoft.com/ja-jp/dotnet/framework/data/adonet/sql/linq/sql-clr-type-mapping?source=recommendations)
+- [SqlDbType 列挙型 (System.Data) | Microsoft Learn](https://learn.microsoft.com/ja-jp/dotnet/api/system.data.sqldbtype?view=net-8.0)
