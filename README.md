@@ -4,6 +4,20 @@ SQLBulkCopyをラップした、PowerShellコマンドレットです。
 
 テーブル名とCSVファイルパスを指定することで任意のテーブルにCSVの値を登録することが出来ます。
 
+## インストール方法
+
+パッケージはPowerShell Galleryへ公開してあります。
+
+[PowerShell Gallery | PSSQLBulkCopy 1.0.0](https://www.powershellgallery.com/packages/PSSQLBulkCopy/1.0.0)
+
+従って、以下のコマンドでインストールすることが出来ます。
+
+```pwsh
+Install-Module -Name PSSQLBulkCopy
+```
+
+常用するようであれば、 `$PROFILE` へ `Import-Module -Name PSSQLBulkCopy` を記述しておくと良いと思います。
+
 ## 使用方法
 
 サポートされたフォーマットにしたがって用意したCSVをコマンドレットに渡します。
@@ -18,6 +32,8 @@ Invoke-SqlBulkCopy `
   -CsvFilePath {後述のフォーマットに従ったCSVファイルのパス}
   -ConnectionTimeout {接続タイムアウト時間(秒), default: 15秒}
 ```
+
+詳細な情報は `Get-Help` コマンドレットで確認してください。
 
 サポートするCSVのフォーマットは以下の通りになります。
 
