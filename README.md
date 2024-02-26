@@ -8,12 +8,13 @@ SQLBulkCopyをラップした、PowerShellコマンドレットです。
 
 ```pwsh
 Invoke-SqlBulkCopy `
-  -ServerInstance {SQL Serverのサーバーインスタンス名} `
+  -ServerInstance {SQL Serverのサーバーインスタンス名, default: 実行端末のコンピューター名} `
   -Database {対象データベース名} `
   -Username {対象データベースのユーザー名} `
   -Password {対象データベースのユーザーパスワード} `
   -TableName {バルクコピー先のテーブル名} `
   -CsvFilePath {後述のフォーマットに従ったCSVファイルのパス}
+  -ConnectionTimeout {接続タイムアウト時間(秒), default: 15秒}
 ```
 
 サポートするCSVのフォーマットは以下の通りになります。
