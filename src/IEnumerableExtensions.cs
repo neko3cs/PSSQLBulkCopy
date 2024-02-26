@@ -38,11 +38,11 @@ namespace PSSQLBulkCopy
         foreach (var i in Enumerable.Range(0, columnNames.Length))
         {
           object value;
-          if (columns[i].IsDBNull())
+          if (columns[i].Trim().ToUpper() is "DBNULL")
           {
             value = DBNull.Value;
           }
-          else if (types[i].IsBit())
+          else if (types[i].GetNullableUnderlyingTypeString() is "bit")
           {
             value = Convert.ToBoolean(Convert.ToInt16(columns[i]));
           }
@@ -59,16 +59,9 @@ namespace PSSQLBulkCopy
       return table;
     }
 
-    private static string GetNullableUnderlyingTypeString(this string self) =>
-      self.Trim().EndsWith("?") ? self.Trim().Replace("?", "") : self.Trim();
-
     private static bool IsNullable(this string self) =>
       self.Trim().EndsWith("?");
-
-    private static bool IsDBNull(this string self) =>
-      self.GetNullableUnderlyingTypeString() is "DBNULL";
-
-    private static bool IsBit(this string self) =>
-      self.GetNullableUnderlyingTypeString() is "bit";
+    private static string GetNullableUnderlyingTypeString(this string self) =>
+      self.IsNullable() ? self.Trim().Replace("?", "") : self.Trim();
   }
 }
